@@ -11,3 +11,14 @@ type Request_Register struct {
 	Create_At time.Time
 	Update_At time.Time
 }
+
+type Request_Photos struct {
+	Title     string `json:"title"`
+	Caption   string `json:"caption"`
+	Photo_Url string `json:"photo_url`
+}
+
+type Request_Login struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

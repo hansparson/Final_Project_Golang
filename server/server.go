@@ -9,21 +9,26 @@ import (
 )
 
 type Router struct {
-	user *services.UserController
+	control *services.HandlersController
 }
 
-func UserRouther(user *services.UserController) *Router {
-	return &Router{user: user}
+func UserRouther(control *services.HandlersController) *Router {
+	return &Router{control: control}
 }
 
 func (r *Router) Start(port string) {
 	router := gin.Default()
 
 	///// User Handlers /////////
-	router.POST("/users/register", r.user.Register_User)
-	// router.POST("/users/login", r.user.POST_Orders)
-	// router.PUT("/users", r.user.POST_Orders)
-	// router.DELETE("/users", r.user.POST_Orders)
+	router.POST("/users/register", r.control.Register_User)
+	router.POST("/users/login", r.control.Login_User)
+	router.PUT("/users", r.control.PUT_User)
+	router.DELETE("/users", r.control.Delete_User)
+
+	router.POST("/photos", r.control.Post_Photos)
+	// router.GET("/photos", r.user.Register_User)
+	// router.PUT("/photos/", r.user.Register_User)
+	// router.DELETE("/photos", r.user.Register_User)
 
 	router.Run(port)
 }

@@ -4,12 +4,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserController struct {
+type HandlersController struct {
 	db *gorm.DB
 }
 
-func User_DB_Controller(db *gorm.DB) *UserController {
-	return &UserController{
+func User_DB_Controller(db *gorm.DB) *HandlersController {
+	return &HandlersController{
 		db: db,
 	}
 }
