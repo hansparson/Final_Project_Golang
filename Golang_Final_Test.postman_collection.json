@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "d9c9c98a-9c86-42ab-adf1-e09cdaaa0802",
+		"name": "Golang_Final_Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21651354"
+	},
+	"item": [
+		{
+			"name": "(users) Register-User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"age\":9,\n    \"email\": \"5@gmail.com\",\n    \"password\": \"1234567890\",\n    \"username\": \"bambang5\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/users/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(user) Login-User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"5@gmail.com\",\n    \"password\": \"1234567890\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/users/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(users) Put Function",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbWJhbmc1IiwiZW1haWwiOiI1QGdtYWlsLmNvbSIsImV4cCI6MTY2NTQwMzE2N30.SLg9ieRW1V3m13kiYKNsZZeQyDamYwOG16gpJHF1MaI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"5@gmail.com\",\n    \"username\": \"bambang5\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/users?userid=2255090066834990695",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users"
+					],
+					"query": [
+						{
+							"key": "userid",
+							"value": "2255090066834990695"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(users) Delete-Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbWJhbmc1IiwiZW1haWwiOiI1QGdtYWlsLmNvbSIsImV4cCI6MTY2NTM4MDc2OH0.zuusfM8bf0R8B567GfwUlvdElmv_6qmk3NYA9ZcjQYg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(photos) Post_Foto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhbWJhbmc1IiwiZW1haWwiOiI1QGdtYWlsLmNvbSIsImV4cCI6MTY2NTQwMzE2N30.SLg9ieRW1V3m13kiYKNsZZeQyDamYwOG16gpJHF1MaI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\":\"Foto Mabok Di Pantai\",\n    \"caption\": \"Lagi Pesta Miras Nich!!!\",\n    \"photo_url\":\"www.google.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/photos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"photos"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

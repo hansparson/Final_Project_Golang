@@ -1,7 +1,6 @@
 package services
 
 import (
-	"database/sql"
 	"encoding/json"
 	"final/server/authentification"
 	"final/server/models"
@@ -10,8 +9,6 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
-	"reflect"
-	"strconv"
 	"strings"
 	"time"
 
@@ -19,7 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
+func (postgres *HandlersController) SocialMedias_Post(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
 	if tokenString == "" {
@@ -63,7 +60,7 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 	body_string := string(body)
 	println(body_string)
 
-	var key_data views.Request_Photos
+	var key_data views.Request_Social_Medias
 
 	err := json.Unmarshal([]byte(body_string), &key_data)
 	if err != nil {
@@ -76,17 +73,16 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 		})
 		return
 	}
-	println("Title: %s", key_data.Title)
-	println("Caption: %s", key_data.Caption)
-	println("Photo_Url: %s", key_data.Photo_Url)
+	println("Name: ", key_data.Name)
+	println("Request_Social_Medias: ", key_data.Social_Media_Url)
 
 	// Tittle and Photo_Url Validation
-	if key_data.Title == "" || key_data.Photo_Url == "" {
+	if key_data.Name == "" || key_data.Social_Media_Url == "" {
 		WriteJsonResponse_Failed(ctx, &views.Failed{
 			Message_Action: "VALIDATION_ERROR",
 			Status:         http.StatusUnprocessableEntity,
 			Message_Data: views.Message{
-				Message: "photo_url or title field is empty!",
+				Message: "name or social media url field is empty!",
 			},
 		})
 		return
@@ -95,7 +91,8 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 	// query data from table photo
 	var result models.User
 	postgres.db.Table("users").Select("id").Where("email = ?", email).Scan(&result)
-	println(result.ID)
+	userid := int(result.ID)
+
 	if result.ID == 0 {
 		WriteJsonResponse_Failed(ctx, &views.Failed{
 			Message_Action: "VALIDATION_ERROR",
@@ -107,19 +104,34 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 		return
 	}
 
-	//generate photo_ID
+	// var result1 models.SocialMedia
+	// postgres.db.Table("social_media").Where("user_id = ?", userid).Find(&result1)
+	// if result1.ID != 0 {
+	// 	WriteJsonResponse_Failed(ctx, &views.Failed{
+	// 		Message_Action: "GENERAL_REQUEST_ERROR",
+	// 		Status:         http.StatusInternalServerError,
+	// 		Message_Data: views.Message{
+	// 			Message: "No Social Media Already Registered to this Account!!",
+	// 		},
+	// 	})
+	// 	return
+	// }
+
+	//generate Social_Media_ID
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
 
+	println(userid)
+	userid_creat := userid
 	// Create/Insert Photo to databases
-	err_photo := postgres.db.Create(&models.Photo{
-		ID:        r1.Int(),
-		Title:     key_data.Title,
-		Caption:   key_data.Caption,
-		Photo_Url: key_data.Photo_Url,
-		User_Id:   result.ID,
-		Create_At: time.Now(),
-		Update_At: time.Now(),
+	err_photo := postgres.db.Create(&models.SocialMedia{
+		ID:                r1.Int(),
+		Name:              key_data.Name,
+		Social_Media_Url:  key_data.Social_Media_Url,
+		Profile_Image_Url: "",
+		User_Id:           userid_creat,
+		Create_At:         time.Now(),
+		Update_At:         time.Now(),
 	}).Error
 
 	if err_photo != nil {
@@ -133,21 +145,20 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 		return
 	}
 
-	WriteJsonResponse_PostPhoto(ctx, &views.Resp_Post_Photo{
+	WriteJsonResponse_PostSocialMedia(ctx, &views.Post_Social_Media{
 		Message_Action: "SUCCESS",
-		Status:         http.StatusOK,
-		Message_Data: views.Data_Photo{
-			ID:        r1.Int(),
-			Title:     key_data.Title,
-			Caption:   key_data.Caption,
-			Photo_Url: key_data.Photo_Url,
-			User_Id:   result.ID,
-			Create_At: time.Now(),
+		Status:         http.StatusCreated,
+		Message_Data: views.Post_Social_Media_Data{
+			ID:               r1.Int(),
+			Name:             key_data.Name,
+			Social_Media_Url: key_data.Social_Media_Url,
+			User_Id:          userid,
+			Create_At:        time.Now(),
 		},
 	})
 }
 
-func (postgres *HandlersController) Get_Photos(ctx *gin.Context) {
+func (postgres *HandlersController) SocialMedias_Get(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
 	if tokenString == "" {
@@ -186,62 +197,62 @@ func (postgres *HandlersController) Get_Photos(ctx *gin.Context) {
 	println(username)
 	println(email)
 
-	var s sql.NullString
-	postgres.db.Select("id").Where("email = ?", email).First(&models.User{}).Scan(&s)
-	user_id := s.String
-	fmt.Printf("%s \n", user_id)
-	if user_id == "" {
-		WriteJsonResponse_Failed(ctx, &views.Failed{
-			Message_Action: "GENERAL_REQUEST_ERROR",
-			Status:         http.StatusInternalServerError,
-			Message_Data: views.Message{
-				Message: "No Photo Found!!",
-			},
-		})
-		return
-	}
+	var result_id models.User
+	postgres.db.Table("users").Select("id").Where("email = ?", email).Scan(&result_id)
+	userid := int(result_id.ID)
 
-	var result []models.Photo
-	err := postgres.db.Table("photos").Where("user_id = ?", user_id).First(&models.Photo{}).Error
+	var result []models.SocialMedia
+	err := postgres.db.Table("social_media").Where("user_id = ?", userid).First(&result).Error
 	if err != nil {
 		WriteJsonResponse_Failed(ctx, &views.Failed{
 			Message_Action: "GENERAL_REQUEST_ERROR",
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
-				Message: "No Photo Found!!",
+				Message: "No Social Media Found!!",
 			},
 		})
 		return
 	}
-	hasil := postgres.db.Table("photos").Where("user_id = ?", user_id).First(&result)
-
+	hasil := postgres.db.Table("social_media").Where("user_id = ?", userid).Find(&result)
+	if result[0].ID == 0 {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "No Social Media Found!!",
+			},
+		})
+		return
+	}
 	var a = make([]interface{}, hasil.RowsAffected)
 	for i := 0; i < int(hasil.RowsAffected); i++ {
-		tambah := &views.Get_Photos_Data{
-			ID:        result[i].ID,
-			Title:     result[i].Title,
-			Caption:   result[i].Caption,
-			Photo_Url: result[i].Photo_Url,
-			User_Id:   result[i].User_Id,
-			Create_At: result[i].Create_At,
-			User: views.User{
-				Email:    email,
-				Username: username,
+		result_social_media := &views.User_Sosial_Media_Data_get{
+			ID:               result[i].ID,
+			Name:             result[i].Name,
+			Social_Media_Url: result[i].Social_Media_Url,
+			User_Id:          userid,
+			Create_At:        result[i].Create_At,
+			Update_At:        result[i].Update_At,
+			User_Get: views.User_SM_Get{
+				ID:                userid,
+				Username:          username,
+				Profile_Image_Url: "di isi manual",
 			},
 		}
-		a[i] = tambah
+		a[i] = result_social_media
 	}
-
-	WriteJsonResponse_GetPhoto(ctx, &views.Get_Photos{
+	WriteJsonResponse_GetSocialMedia(ctx, &views.Post_Social_Media_Get{
 		Message_Action: "SUCCESS",
-		Status:         http.StatusCreated,
-		Message_Data:   a,
+		Status:         http.StatusOK,
+		Message_Data: views.Post_Social_Media_Get_Data{
+			Social_Media: a,
+		},
 	})
 }
 
-func (postgres *HandlersController) Put_Photos(ctx *gin.Context) {
-	photoId := ctx.Param("photoId")
-	println(photoId)
+func (postgres *HandlersController) SocialMedias_Put(ctx *gin.Context) {
+	socialMediaId := ctx.Param("socialMediaId")
+	println(socialMediaId)
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
 	if tokenString == "" {
@@ -285,7 +296,7 @@ func (postgres *HandlersController) Put_Photos(ctx *gin.Context) {
 	body_string := string(body)
 	println(body_string)
 
-	var key_data views.Request_Photos
+	var key_data views.Request_Social_Medias
 
 	err := json.Unmarshal([]byte(body_string), &key_data)
 	if err != nil {
@@ -293,49 +304,59 @@ func (postgres *HandlersController) Put_Photos(ctx *gin.Context) {
 			Message_Action: "GENERAL_REQUEST_ERROR",
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
-				Message: "failed to post photo",
+				Message: "failed to update Social Media Data!!",
 			},
 		})
 		return
 	}
-	println("Title: %s", key_data.Title)
-	println("Caption: %s", key_data.Caption)
-	println("Photo_Url: %s", key_data.Photo_Url)
+	println("Name: %s", key_data.Name)
+	println("Social_Media_Url: %s", key_data.Social_Media_Url)
+	println("Profile_Image_Url: %s", key_data.Profile_Image_Url)
 
 	// querry user data
 	var result models.User
 	postgres.db.Table("users").Select("id").Where("email = ?", email).Scan(&result)
 	println(result.ID)
 
+	//Query Social Media ID
+	var result_sm models.SocialMedia
+	postgres.db.Table("social_media").Where("id = ?", socialMediaId).Find(&result_sm)
+	if result_sm.ID == 0 {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "No Social Media Found on this Account!",
+			},
+		})
+		return
+	}
+
 	//// Update Data
-	postgres.db.Model(&models.Photo{}).Where("id = ?", photoId).Updates(
-		models.Photo{
-			Title:     key_data.Title,
-			Caption:   key_data.Caption,
-			Photo_Url: key_data.Photo_Url,
-			Update_At: time.Now(),
+	postgres.db.Model(&models.SocialMedia{}).Where("id = ?", result_sm.ID).Updates(
+		models.SocialMedia{
+			Name:             key_data.Name,
+			Social_Media_Url: key_data.Social_Media_Url,
+			User_Id:          result.ID,
+			Update_At:        time.Now(),
 		})
 
-	intVar, err := strconv.Atoi(photoId)
-	fmt.Println(intVar, err, reflect.TypeOf(intVar))
-
-	WriteJsonResponse_PutPhoto(ctx, &views.Put_Photos{
+	WriteJsonResponse_PutSocialMedia(ctx, &views.Put_Social_Media_Get{
 		Message_Action: "SUCCESS",
-		Status:         http.StatusCreated,
-		Message_Data: views.Put_Photos_Data{
-			ID:        intVar,
-			Title:     key_data.Title,
-			Caption:   key_data.Caption,
-			Photo_Url: key_data.Photo_Url,
-			User_Id:   result.ID,
-			Update_At: time.Now(),
+		Status:         http.StatusOK,
+		Message_Data: views.Put_Social_Media_Data{
+			ID:               result_sm.ID,
+			Name:             key_data.Name,
+			Social_Media_Url: key_data.Social_Media_Url,
+			User_Id:          result.ID,
+			Update_At:        time.Now(),
 		},
 	})
 }
 
-func (postgres *HandlersController) Delete_Photos(ctx *gin.Context) {
-	photoId := ctx.Param("photoId")
-	println(photoId)
+func (postgres *HandlersController) SocialMedias_Delete(ctx *gin.Context) {
+	socialMediaId := ctx.Param("socialMediaId")
+	println(socialMediaId)
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
 	if tokenString == "" {
@@ -378,29 +399,28 @@ func (postgres *HandlersController) Delete_Photos(ctx *gin.Context) {
 	var result models.User
 	postgres.db.Table("users").Select("id").Where("email = ?", email).Scan(&result)
 	println(result.ID)
-	println(photoId)
 
-	//Query Photo ID
-	var result_sm models.Photo
-	postgres.db.Table("photos").Where("id = ? AND user_id = ?", photoId, result.ID).Find(&result_sm)
+	//Query Social Media ID
+	var result_sm models.SocialMedia
+	postgres.db.Table("social_media").Where("id = ? AND user_id = ?", socialMediaId, result.ID).Find(&result_sm)
 	if result_sm.ID == 0 {
 		WriteJsonResponse_Failed(ctx, &views.Failed{
 			Message_Action: "GENERAL_REQUEST_ERROR",
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
-				Message: "Photo ID Not Found on this Account!",
+				Message: "The Social Media ID Found on this Account!",
 			},
 		})
 		return
 	}
 
-	err := postgres.db.Where("id = ?", photoId).Delete(&models.Photo{}).Error
+	err := postgres.db.Where("id = ?", socialMediaId).Delete(&models.SocialMedia{}).Error
 	if err != nil {
 		WriteJsonResponse_Failed(ctx, &views.Failed{
 			Message_Action: "GENERAL_REQUEST_ERROR",
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
-				Message: "Delete Photo Failed",
+				Message: "Delete User Failed",
 			},
 		})
 		return
@@ -410,7 +430,8 @@ func (postgres *HandlersController) Delete_Photos(ctx *gin.Context) {
 		Message_Action: "SUCCESS",
 		Status:         http.StatusOK,
 		Message_Data: views.Data_Delete{
-			Message: "Your Photo has been successfully deleted!!",
+			Message: "Your social media has been successfully deleted!!",
 		},
 	})
+
 }
