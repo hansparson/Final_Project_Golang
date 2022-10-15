@@ -9,12 +9,22 @@ import (
 	"gorm.io/gorm"
 )
 
+// const (
+//
+//	host   = "localhost"
+//	port   = "5432"
+//	user   = "postgres"
+//	pass   = "12345"
+//	dbname = "my_gram"
+//
+// )
+// Railway DB
 const (
-	host   = "localhost"
-	port   = "5432"
+	host   = "containers-us-west-105.railway.app"
+	port   = "5809"
 	user   = "postgres"
-	pass   = "12345"
-	dbname = "my_gram"
+	pass   = "GlTOYn3jppSR0V5gV3iE"
+	dbname = "railway"
 )
 
 func ConnectGorm() *gorm.DB {
