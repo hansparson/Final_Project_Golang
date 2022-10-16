@@ -1,26 +1,19 @@
 package main
 
 import (
-	"final/db"
-	"final/server"
-	"final/server/services"
+	"fmt"
+	"net/http"
 )
 
-// @title My Grams APP
-// @description Final Project Golang
-// @version v1.0
-// @termsOfService http://swagger.io/terms/
-// @BasePath /
-// @host localhost:52000
-// @contact.name Hans Parson
-// @contact.email hansparson013@gmail.com
+var PORT = ":8080"
 
 func main() {
-	port := ":8080"
-	db := db.ConnectGorm()
+	http.HandleFunc("/", greet)
 
-	//// Running Service User ////
-	serviceController := services.User_DB_Controller(db)
-	user_service := server.UserRouther(serviceController)
-	user_service.Start(port)
+	http.ListenAndServe(PORT, nil)
+}
+
+func greet(w http.ResponseWriter, r *http.Request) {
+	msg := "Hello World"
+	fmt.Fprint(w, msg)
 }
