@@ -13,7 +13,7 @@ import (
 // @version v2.0
 // @termsOfService http://swagger.io/terms/
 // @BasePath /
-// @host localhost:6534
+// @host localhost:os.Getenv("PORT")
 // @contact.name Hans Parson
 // @contact.email hansparson013@gmail.com
 
@@ -25,4 +25,5 @@ func main() {
 	serviceController := services.User_DB_Controller(db)
 	user_service := server.UserRouther(serviceController)
 	user_service.Start(":" + PORT)
+	// user_service.Start(":4000")
 }
