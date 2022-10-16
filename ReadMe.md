@@ -23,5 +23,5 @@ Swagger Link:
 
 
 {Sistem Telah ter Deploy di railway, thank to Hacktiv8 dan instruktur dengan kelas golang yang menyenangkan.}
-{Semoga Dapat Bertemu di Kelas Yang Lainnya}
-{}
+                {Semoga Dapat Bertemu di Kelas Yang Lainnya}
+                                {TTD Hans Parson Alumni Hacktiv8}
