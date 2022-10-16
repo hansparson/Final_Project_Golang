@@ -16,11 +16,11 @@ import (
 // @contact.email hansparson013@gmail.com
 
 func main() {
-	// port := ":4000"
+	port := ":8080"
 	db := db.ConnectGorm()
 
 	//// Running Service User ////
 	serviceController := services.User_DB_Controller(db)
 	user_service := server.UserRouther(serviceController)
-	user_service.Start(":PORT")
+	user_service.Start(port)
 }
