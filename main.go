@@ -13,7 +13,7 @@ import (
 // @version v2.0
 // @termsOfService http://swagger.io/terms/
 // @BasePath /
-// @host https://finalprojectgolang-production.up.railway.app
+// @host finalprojectgolang-production.up.railway.app
 // @contact.name Hans Parson
 // @contact.email hansparson013@gmail.com
 

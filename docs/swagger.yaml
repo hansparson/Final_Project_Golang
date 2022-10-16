@@ -7,7 +7,7 @@ info:
     name: Hans Parson
     email: hansparson013@gmail.com
   version: v1.0
-host: https://finalprojectgolang-production.up.railway.app
+host: finalprojectgolang-production.up.railway.app
 basePath: /
 paths:
   /comments:
