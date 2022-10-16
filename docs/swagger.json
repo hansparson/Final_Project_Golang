@@ -10,7 +10,7 @@
       },
       "version": "v1.0"
     },
-    "host": "localhost:6534",
+    "host": "https://finalprojectgolang-production.up.railway.app",
     "basePath": "/",
     "paths": {
       "/comments": {
