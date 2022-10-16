@@ -10,22 +10,22 @@ import (
 )
 
 // LOCAL DB
-const (
-	host   = "localhost"
-	port   = "5432"
-	user   = "postgres"
-	pass   = "12345"
-	dbname = "my_gram"
-)
+// const (
+// 	host   = "localhost"
+// 	port   = "5432"
+// 	user   = "postgres"
+// 	pass   = "12345"
+// 	dbname = "my_gram"
+// )
 
 // Railway DB
-// const (
-// 	host   = "containers-us-west-105.railway.app"
-// 	port   = "5809"
-// 	user   = "postgres"
-// 	pass   = "GlTOYn3jppSR0V5gV3iE"
-// 	dbname = "railway"
-// )
+const (
+	host   = "containers-us-west-105.railway.app"
+	port   = "5809"
+	user   = "postgres"
+	pass   = "GlTOYn3jppSR0V5gV3iE"
+	dbname = "railway"
+)
 
 func ConnectGorm() *gorm.DB {
 	dsn := fmt.Sprintf(
