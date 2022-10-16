@@ -19,6 +19,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateResource godoc
+// @Summary Post Comments
+// @Description Post Comments
+// @Tags COMMENTS
+// @Accept  json
+// @Produce      json
+// @Param Comments body views.Swagger_Comment_Register_Post true "Post Comments"
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Success 200  {object} string "success"
+// @Router /comments [post]
 func (postgres *HandlersController) Comments_Post(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
@@ -28,6 +38,17 @@ func (postgres *HandlersController) Comments_Post(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -125,7 +146,7 @@ func (postgres *HandlersController) Comments_Post(ctx *gin.Context) {
 	r1 := rand.New(s1)
 	// Create/Insert Photo to databases
 	err_photo := postgres.db.Create(&models.Comment{
-		ID:        r1.Int(),
+		ID:        r1.Int() / 100000,
 		User_Id:   result.ID,
 		Photo_Id:  key_data.Photo_Id,
 		Message:   key_data.Message,
@@ -148,7 +169,7 @@ func (postgres *HandlersController) Comments_Post(ctx *gin.Context) {
 		Message_Action: "SUCCESS",
 		Status:         http.StatusCreated,
 		Message_Data: views.Comments_Post_Data{
-			ID:        r1.Int(),
+			ID:        r1.Int() / 100000,
 			Message:   key_data.Message,
 			Photo_Id:  key_data.Photo_Id,
 			User_Id:   result.ID,
@@ -157,6 +178,15 @@ func (postgres *HandlersController) Comments_Post(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Get Comments
+// @Description Get Comments
+// @Tags COMMENTS
+// @Accept  json
+// @Produce      json
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Success 200  {object} string "success"
+// @Router /comments [get]
 func (postgres *HandlersController) Comment_Get(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
@@ -166,6 +196,17 @@ func (postgres *HandlersController) Comment_Get(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -257,6 +298,17 @@ func (postgres *HandlersController) Comment_Get(ctx *gin.Context) {
 	fmt.Println(hasil_comment)
 }
 
+// CreateResource godoc
+// @Summary Update Comments
+// @Description Update Comments
+// @Tags COMMENTS
+// @Accept  json
+// @Produce      json
+// @Param Comments body views.Swagger_Comment_Register_Put true "Update Comments"
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Param commentId path int true "ID Comment"
+// @Success 200  {object} string "success"
+// @Router /comments/{commentId} [put]
 func (postgres *HandlersController) Comment_Put(ctx *gin.Context) {
 	CommentId := ctx.Param("commentId")
 	println(CommentId)
@@ -268,6 +320,17 @@ func (postgres *HandlersController) Comment_Put(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -329,6 +392,16 @@ func (postgres *HandlersController) Comment_Put(ctx *gin.Context) {
 
 	var comment_foto models.Comment
 	postgres.db.Table("comments").Where("id = ?", intVar).Find(&comment_foto)
+	if comment_foto.Photo_Id == 0 {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "Comment ID Not Found!!",
+			},
+		})
+		return
+	}
 
 	var photo_Detail models.Photo
 	postgres.db.Table("photos").Where("id = ?", comment_foto.Photo_Id).Find(&photo_Detail)
@@ -347,6 +420,16 @@ func (postgres *HandlersController) Comment_Put(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Delete Comments
+// @Description Delete Comments
+// @Tags COMMENTS
+// @Accept  json
+// @Produce      json
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Param commentId path int true "ID Comment"
+// @Success 200  {object} string "success"
+// @Router /comments/{commentId} [delete]
 func (postgres *HandlersController) Comment_Delete(ctx *gin.Context) {
 	CommentId := ctx.Param("commentId")
 	println(CommentId)
@@ -358,6 +441,17 @@ func (postgres *HandlersController) Comment_Delete(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -423,7 +517,7 @@ func (postgres *HandlersController) Comment_Delete(ctx *gin.Context) {
 		Message_Action: "SUCCESS",
 		Status:         http.StatusOK,
 		Message_Data: views.Data_Delete{
-			Message: "Your social media has been successfully deleted!!",
+			Message: "Your comment has been successfully deleted!!",
 		},
 	})
 }

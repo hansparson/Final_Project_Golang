@@ -16,6 +16,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateResource godoc
+// @Summary Post SocialMedia
+// @Description Post SocialMedia
+// @Tags SOCIAL_MEDIA
+// @Accept  json
+// @Produce      json
+// @Param Social_Media body views.Swagger_Social_Media_Post true "Post Social Media"
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Success 200  {object} string "success"
+// @Router /socialmedias [post]
 func (postgres *HandlersController) SocialMedias_Post(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
@@ -25,6 +35,17 @@ func (postgres *HandlersController) SocialMedias_Post(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -104,19 +125,6 @@ func (postgres *HandlersController) SocialMedias_Post(ctx *gin.Context) {
 		return
 	}
 
-	// var result1 models.SocialMedia
-	// postgres.db.Table("social_media").Where("user_id = ?", userid).Find(&result1)
-	// if result1.ID != 0 {
-	// 	WriteJsonResponse_Failed(ctx, &views.Failed{
-	// 		Message_Action: "GENERAL_REQUEST_ERROR",
-	// 		Status:         http.StatusInternalServerError,
-	// 		Message_Data: views.Message{
-	// 			Message: "No Social Media Already Registered to this Account!!",
-	// 		},
-	// 	})
-	// 	return
-	// }
-
 	//generate Social_Media_ID
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
@@ -125,10 +133,10 @@ func (postgres *HandlersController) SocialMedias_Post(ctx *gin.Context) {
 	userid_creat := userid
 	// Create/Insert Photo to databases
 	err_photo := postgres.db.Create(&models.SocialMedia{
-		ID:                r1.Int(),
+		ID:                r1.Int() / 100000,
 		Name:              key_data.Name,
 		Social_Media_Url:  key_data.Social_Media_Url,
-		Profile_Image_Url: "",
+		Profile_Image_Url: key_data.Profile_Image_Url,
 		User_Id:           userid_creat,
 		Create_At:         time.Now(),
 		Update_At:         time.Now(),
@@ -149,7 +157,7 @@ func (postgres *HandlersController) SocialMedias_Post(ctx *gin.Context) {
 		Message_Action: "SUCCESS",
 		Status:         http.StatusCreated,
 		Message_Data: views.Post_Social_Media_Data{
-			ID:               r1.Int(),
+			ID:               r1.Int() / 100000,
 			Name:             key_data.Name,
 			Social_Media_Url: key_data.Social_Media_Url,
 			User_Id:          userid,
@@ -158,6 +166,15 @@ func (postgres *HandlersController) SocialMedias_Post(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Get SocialMedia
+// @Description Get Social_Media
+// @Tags SOCIAL_MEDIA
+// @Accept  json
+// @Produce      json
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Success 200  {object} string "success"
+// @Router /socialmedias [get]
 func (postgres *HandlersController) SocialMedias_Get(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
@@ -167,6 +184,17 @@ func (postgres *HandlersController) SocialMedias_Get(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -250,6 +278,17 @@ func (postgres *HandlersController) SocialMedias_Get(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Update Social_Media
+// @Description Update Social_Media
+// @Tags SOCIAL_MEDIA
+// @Accept  json
+// @Produce      json
+// @Param Social_Media body views.Swagger_Social_Media_Put true "Update Social Media"
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Param socialMediaId path int true "Social Media ID"
+// @Success 200  {object} string "success"
+// @Router /socialmedias/{socialMediaId} [put]
 func (postgres *HandlersController) SocialMedias_Put(ctx *gin.Context) {
 	socialMediaId := ctx.Param("socialMediaId")
 	println(socialMediaId)
@@ -261,6 +300,17 @@ func (postgres *HandlersController) SocialMedias_Put(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -354,6 +404,16 @@ func (postgres *HandlersController) SocialMedias_Put(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Get Social_Media
+// @Description Get Social_MEdia
+// @Tags SOCIAL_MEDIA
+// @Accept  json
+// @Produce      json
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Param socialMediaId path int true "Social Media ID"
+// @Success 200  {object} string "success"
+// @Router /socialmedias/{socialMediaId} [delete]
 func (postgres *HandlersController) SocialMedias_Delete(ctx *gin.Context) {
 	socialMediaId := ctx.Param("socialMediaId")
 	println(socialMediaId)
@@ -365,6 +425,17 @@ func (postgres *HandlersController) SocialMedias_Delete(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()

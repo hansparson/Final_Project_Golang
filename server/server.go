@@ -4,6 +4,10 @@ import (
 	// "final/server/controllers"
 
 	"final/server/services"
+	"net/http"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +21,11 @@ func UserRouther(control *services.HandlersController) *Router {
 }
 
 func (r *Router) Start(port string) {
-	router := gin.Default()
+	router := gin.New()
+
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"data": "Welcome To Sample program swagger"})
+	})
 
 	///// User Handlers /////////
 	router.POST("/users/register", r.control.Register_User)
@@ -39,6 +47,8 @@ func (r *Router) Start(port string) {
 	router.GET("/socialmedias", r.control.SocialMedias_Get)
 	router.PUT("/socialmedias/:socialMediaId", r.control.SocialMedias_Put)
 	router.DELETE("/socialmedias/:socialMediaId", r.control.SocialMedias_Delete)
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	router.Run(port)
 }

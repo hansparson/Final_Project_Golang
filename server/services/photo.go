@@ -19,6 +19,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateResource godoc
+// @Summary Post Photo
+// @Description Post Photo
+// @Tags PHOTO
+// @Accept  json
+// @Produce      json
+// @Param Photo body views.Swagger_Photo_Register_Post true "Post Photo"
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Success 200  {object} string "success"
+// @Router /photos [post]
 func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
@@ -28,6 +38,17 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -113,7 +134,7 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 
 	// Create/Insert Photo to databases
 	err_photo := postgres.db.Create(&models.Photo{
-		ID:        r1.Int(),
+		ID:        r1.Int() / 100000,
 		Title:     key_data.Title,
 		Caption:   key_data.Caption,
 		Photo_Url: key_data.Photo_Url,
@@ -137,7 +158,7 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 		Message_Action: "SUCCESS",
 		Status:         http.StatusOK,
 		Message_Data: views.Data_Photo{
-			ID:        r1.Int(),
+			ID:        r1.Int() / 100000,
 			Title:     key_data.Title,
 			Caption:   key_data.Caption,
 			Photo_Url: key_data.Photo_Url,
@@ -147,6 +168,13 @@ func (postgres *HandlersController) Post_Photos(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Get Photo
+// @Description Get Photo
+// @Tags PHOTO
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Success 201  {object} string "success"
+// @Router /photos [get]
 func (postgres *HandlersController) Get_Photos(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
@@ -156,6 +184,17 @@ func (postgres *HandlersController) Get_Photos(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -213,7 +252,7 @@ func (postgres *HandlersController) Get_Photos(ctx *gin.Context) {
 		})
 		return
 	}
-	hasil := postgres.db.Table("photos").Where("user_id = ?", user_id).First(&result)
+	hasil := postgres.db.Table("photos").Where("user_id = ?", user_id).Find(&result)
 
 	var a = make([]interface{}, hasil.RowsAffected)
 	for i := 0; i < int(hasil.RowsAffected); i++ {
@@ -239,6 +278,17 @@ func (postgres *HandlersController) Get_Photos(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Update Photo
+// @Description Update Photo
+// @Tags PHOTO
+// @Accept  json
+// @Produce      json
+// @Param Photo body views.Swagger_Comment_Register_Put true "Update Photo"
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Param photoId path int true "Id Photo"
+// @Success 200  {object} string "success"
+// @Router /photos/{photoId} [put]
 func (postgres *HandlersController) Put_Photos(ctx *gin.Context) {
 	photoId := ctx.Param("photoId")
 	println(photoId)
@@ -250,6 +300,17 @@ func (postgres *HandlersController) Put_Photos(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
@@ -333,6 +394,16 @@ func (postgres *HandlersController) Put_Photos(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Delete Photo
+// @Description Delete Photo
+// @Tags PHOTO
+// @Accept  json
+// @Produce      json
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Param photoId path int true "Id Photo"
+// @Success 200  {object} string "success"
+// @Router /photos/{photoId} [delete]
 func (postgres *HandlersController) Delete_Photos(ctx *gin.Context) {
 	photoId := ctx.Param("photoId")
 	println(photoId)
@@ -344,6 +415,17 @@ func (postgres *HandlersController) Delete_Photos(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()

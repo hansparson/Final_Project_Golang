@@ -54,6 +54,16 @@ func CreateToken(userid int) (string, error) {
 // ///////////////////////////////////////////////////////////////////////////////////////////////
 // //////////////////////////////////// HANDLERS FOR USER ////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////////////////////////////////
+
+// CreateResource godoc
+// @Summary Creates User account
+// @Description Register User
+// @Tags USER
+// @Accept  json
+// @Produce      json
+// @Param user body views.Swagger_User_Register_Post true "Register User"
+// @Success 201  {object} string "success"
+// @Router /users/register [post]
 func (postgres *HandlersController) Register_User(ctx *gin.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request.Body)
 	body_string := string(body)
@@ -172,7 +182,7 @@ func (postgres *HandlersController) Register_User(ctx *gin.Context) {
 	r1 := rand.New(s1)
 
 	err_create := postgres.db.Create(&models.User{
-		ID:        r1.Int(),
+		ID:        r1.Int() / 100000,
 		Username:  key_data.Username,
 		Email:     key_data.Email,
 		Password:  hash,
@@ -197,7 +207,7 @@ func (postgres *HandlersController) Register_User(ctx *gin.Context) {
 		Message_Data: views.Data_Register{
 			Age:       key_data.Age,
 			Email:     key_data.Email,
-			ID:        r1.Int(),
+			ID:        r1.Int() / 100000,
 			Username:  key_data.Username,
 			Create_At: time.Now(),
 			Update_At: time.Now(),
@@ -205,6 +215,15 @@ func (postgres *HandlersController) Register_User(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Login Account
+// @Description Login Account
+// @Tags USER
+// @Accept  json
+// @Produce      json
+// @Param user body views.Swagger_User_Login_Post true "Login User"
+// @Success 200  {object} string "success"
+// @Router /users/login [post]
 func (postgres *HandlersController) Login_User(ctx *gin.Context) {
 	body, _ := ioutil.ReadAll(ctx.Request.Body)
 	body_string := string(body)
@@ -278,16 +297,28 @@ func (postgres *HandlersController) Login_User(ctx *gin.Context) {
 
 	WriteJsonResponse_Login(ctx, &views.Resp_Login{
 		Message_Action: "SUCCESS",
-		Status:         http.StatusCreated,
+		Status:         http.StatusOK,
 		Message_Data: views.Token{
 			Token: token,
 		},
 	})
 }
 
+// CreateResource godoc
+// @Summary Update Data Account
+// @Description Update Data Account
+// @Tags USER
+// @Accept  json
+// @Produce      json
+// @Param User body views.Swagger_User_Update_Put true "Update Data User"
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Param userid query int  true  "User ID"
+// @Success 200  {object} string "success"
+// @Router /users [put]
 func (postgres *HandlersController) PUT_User(ctx *gin.Context) {
 	// Check Authorization
 	tokenString := ctx.GetHeader("Authorization")
+	fmt.Println(tokenString)
 	if tokenString == "" {
 		WriteJsonResponse_Failed(ctx, &views.Failed{
 			Message_Action: "GENERAL_REQUEST_ERROR",
@@ -299,7 +330,18 @@ func (postgres *HandlersController) PUT_User(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	jwtString := strings.Split(tokenString, "Bearer ")[1]
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	jwtString := strings.ReplaceAll(tokenString, "Bearer ", "")
 	err1 := authentification.ValidateToken(tokenString)
 	if err1 != nil {
 		WriteJsonResponse_Failed(ctx, &views.Failed{
@@ -418,6 +460,15 @@ func (postgres *HandlersController) PUT_User(ctx *gin.Context) {
 	})
 }
 
+// CreateResource godoc
+// @Summary Delete Data Account
+// @Description Delete Data Account
+// @Tags USER
+// @Accept  json
+// @Produce      json
+// @Param Authorization header string  true  "Token Barier example: 'Bearer 12355f32r'"
+// @Success 200  {object} string "success"
+// @Router /users [delete]
 func (postgres *HandlersController) Delete_User(ctx *gin.Context) {
 	tokenString := ctx.GetHeader("Authorization")
 	if tokenString == "" {
@@ -426,6 +477,17 @@ func (postgres *HandlersController) Delete_User(ctx *gin.Context) {
 			Status:         http.StatusInternalServerError,
 			Message_Data: views.Message{
 				Message: "request does not contain an access token.",
+			},
+		})
+		ctx.Abort()
+		return
+	}
+	if strings.Contains(tokenString, "Bearer") == false {
+		WriteJsonResponse_Failed(ctx, &views.Failed{
+			Message_Action: "GENERAL_REQUEST_ERROR",
+			Status:         http.StatusInternalServerError,
+			Message_Data: views.Message{
+				Message: "format Authentification Bearer not found",
 			},
 		})
 		ctx.Abort()
