@@ -81,7 +81,7 @@ definitions:
         example: String
         type: string
     type: object
-host: localhost:os.Getenv("PORT")
+host: localhost:6534
 info:
   contact:
     email: hansparson013@gmail.com

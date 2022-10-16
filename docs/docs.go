@@ -6,7 +6,7 @@ import "github.com/swaggo/swag"
 
 const docTemplate = `{
     "schemes": {{ marshal .Schemes }},
-    "swagger": "2.0",
+    "swagger": "3.0",
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
@@ -752,7 +752,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "v1.0",
-	Host:             "localhost:os.Getenv(\"PORT\")",
+	Host:             "localhost:6534",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "My Grams APP",

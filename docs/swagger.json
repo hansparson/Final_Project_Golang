@@ -1,5 +1,5 @@
 {
-    "swagger": "2.0",
+    "swagger": "3.0",
     "info": {
         "description": "Final Project Golang",
         "title": "My Grams APP",
@@ -10,7 +10,7 @@
         },
         "version": "v1.0"
     },
-    "host": "localhost:os.Getenv(\"PORT\")",
+    "host": "localhost:6534",
     "basePath": "/",
     "paths": {
         "/comments": {
