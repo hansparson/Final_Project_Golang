@@ -10,7 +10,7 @@ import (
 
 // @title My Grams APP
 // @description Final Project Golang
-// @version v1.0
+// @version v2.0
 // @termsOfService http://swagger.io/terms/
 // @BasePath /
 // @host localhost:6534
