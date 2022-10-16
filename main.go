@@ -22,5 +22,5 @@ func main() {
 	//// Running Service User ////
 	serviceController := services.User_DB_Controller(db)
 	user_service := server.UserRouther(serviceController)
-	user_service.Start("$PORT")
+	user_service.Start("0.0.0.0:$PORT")
 }
