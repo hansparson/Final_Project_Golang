@@ -1,498 +1,498 @@
-basePath: /
-definitions:
-  views.Swagger_Comment_Register_Post:
-    properties:
-      message:
-        example: String
-        type: string
-      photo_id:
-        example: 0
-        type: integer
-    type: object
-  views.Swagger_Comment_Register_Put:
-    properties:
-      message:
-        example: String
-        type: string
-    type: object
-  views.Swagger_Photo_Register_Post:
-    properties:
-      caption:
-        example: String
-        type: string
-      photo_url:
-        example: String
-        type: string
-      title:
-        example: String
-        type: string
-    type: object
-  views.Swagger_Social_Media_Post:
-    properties:
-      name:
-        example: String
-        type: string
-      profile_image_url:
-        example: String
-        type: string
-      social_media_url:
-        example: String
-        type: string
-    type: object
-  views.Swagger_Social_Media_Put:
-    properties:
-      name:
-        example: String
-        type: string
-      social_media_url:
-        example: String
-        type: string
-    type: object
-  views.Swagger_User_Login_Post:
-    properties:
-      email:
-        example: String
-        type: string
-      password:
-        example: String
-        type: string
-    type: object
-  views.Swagger_User_Register_Post:
-    properties:
-      age:
-        example: 0
-        type: integer
-      email:
-        example: String
-        type: string
-      password:
-        example: String
-        type: string
-      username:
-        example: String
-        type: string
-    type: object
-  views.Swagger_User_Update_Put:
-    properties:
-      email:
-        example: String
-        type: string
-      username:
-        example: String
-        type: string
-    type: object
-host: localhost:6534
+swagger: '2.0'
 info:
-  contact:
-    email: hansparson013@gmail.com
-    name: Hans Parson
   description: Final Project Golang
-  termsOfService: http://swagger.io/terms/
   title: My Grams APP
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Hans Parson
+    email: hansparson013@gmail.com
   version: v1.0
+host: localhost:6534
+basePath: /
 paths:
   /comments:
     get:
-      consumes:
-      - application/json
       description: Get Comments
-      parameters:
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
+      consumes:
+        - application/json
       produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
+        - application/json
+      tags:
+        - COMMENTS
       summary: Get Comments
-      tags:
-      - COMMENTS
+      parameters:
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
     post:
-      consumes:
-      - application/json
       description: Post Comments
-      parameters:
-      - description: Post Comments
-        in: body
-        name: Comments
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_Comment_Register_Post'
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
+      consumes:
+        - application/json
       produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
+        - application/json
+      tags:
+        - COMMENTS
       summary: Post Comments
-      tags:
-      - COMMENTS
+      parameters:
+        - description: Post Comments
+          name: Comments
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_Comment_Register_Post'
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
   /comments/{commentId}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete Comments
-      parameters:
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: ID Comment
-        in: path
-        name: commentId
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
-      summary: Delete Comments
-      tags:
-      - COMMENTS
     put:
-      consumes:
-      - application/json
       description: Update Comments
-      parameters:
-      - description: Update Comments
-        in: body
-        name: Comments
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_Comment_Register_Put'
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: ID Comment
-        in: path
-        name: commentId
-        required: true
-        type: integer
+      consumes:
+        - application/json
       produces:
-      - application/json
+        - application/json
+      tags:
+        - COMMENTS
+      summary: Update Comments
+      parameters:
+        - description: Update Comments
+          name: Comments
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_Comment_Register_Put'
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+        - type: integer
+          description: ID Comment
+          name: commentId
+          in: path
+          required: true
       responses:
-        "200":
+        '200':
           description: success
           schema:
             type: string
-      summary: Update Comments
+    delete:
+      description: Delete Comments
+      consumes:
+        - application/json
+      produces:
+        - application/json
       tags:
-      - COMMENTS
+        - COMMENTS
+      summary: Delete Comments
+      parameters:
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+        - type: integer
+          description: ID Comment
+          name: commentId
+          in: path
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
   /photos:
     get:
       description: Get Photo
-      parameters:
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      responses:
-        "201":
-          description: success
-          schema:
-            type: string
+      tags:
+        - PHOTO
       summary: Get Photo
-      tags:
-      - PHOTO
+      parameters:
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+      responses:
+        '201':
+          description: success
+          schema:
+            type: string
     post:
-      consumes:
-      - application/json
       description: Post Photo
-      parameters:
-      - description: Post Photo
-        in: body
-        name: Photo
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_Photo_Register_Post'
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
+      consumes:
+        - application/json
       produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
+        - application/json
+      tags:
+        - PHOTO
       summary: Post Photo
-      tags:
-      - PHOTO
+      parameters:
+        - description: Post Photo
+          name: Photo
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_Photo_Register_Post'
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
   /photos/{photoId}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete Photo
-      parameters:
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Id Photo
-        in: path
-        name: photoId
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
-      summary: Delete Photo
-      tags:
-      - PHOTO
     put:
-      consumes:
-      - application/json
       description: Update Photo
-      parameters:
-      - description: Update Photo
-        in: body
-        name: Photo
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_Comment_Register_Put'
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Id Photo
-        in: path
-        name: photoId
-        required: true
-        type: integer
+      consumes:
+        - application/json
       produces:
-      - application/json
+        - application/json
+      tags:
+        - PHOTO
+      summary: Update Photo
+      parameters:
+        - description: Update Photo
+          name: Photo
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_Comment_Register_Put'
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+        - type: integer
+          description: Id Photo
+          name: photoId
+          in: path
+          required: true
       responses:
-        "200":
+        '200':
           description: success
           schema:
             type: string
-      summary: Update Photo
+    delete:
+      description: Delete Photo
+      consumes:
+        - application/json
+      produces:
+        - application/json
       tags:
-      - PHOTO
+        - PHOTO
+      summary: Delete Photo
+      parameters:
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+        - type: integer
+          description: Id Photo
+          name: photoId
+          in: path
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
   /socialmedias:
     get:
-      consumes:
-      - application/json
       description: Get Social_Media
-      parameters:
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
+      consumes:
+        - application/json
       produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
+        - application/json
+      tags:
+        - SOCIAL_MEDIA
       summary: Get SocialMedia
-      tags:
-      - SOCIAL_MEDIA
+      parameters:
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
     post:
-      consumes:
-      - application/json
       description: Post SocialMedia
-      parameters:
-      - description: Post Social Media
-        in: body
-        name: Social_Media
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_Social_Media_Post'
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
+      consumes:
+        - application/json
       produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
+        - application/json
+      tags:
+        - SOCIAL_MEDIA
       summary: Post SocialMedia
-      tags:
-      - SOCIAL_MEDIA
+      parameters:
+        - description: Post Social Media
+          name: Social_Media
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_Social_Media_Post'
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
   /socialmedias/{socialMediaId}:
-    delete:
-      consumes:
-      - application/json
-      description: Get Social_MEdia
-      parameters:
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Social Media ID
-        in: path
-        name: socialMediaId
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
-      summary: Get Social_Media
-      tags:
-      - SOCIAL_MEDIA
     put:
-      consumes:
-      - application/json
       description: Update Social_Media
-      parameters:
-      - description: Update Social Media
-        in: body
-        name: Social_Media
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_Social_Media_Put'
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Social Media ID
-        in: path
-        name: socialMediaId
-        required: true
-        type: integer
+      consumes:
+        - application/json
       produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            type: string
+        - application/json
+      tags:
+        - SOCIAL_MEDIA
       summary: Update Social_Media
-      tags:
-      - SOCIAL_MEDIA
-  /users:
+      parameters:
+        - description: Update Social Media
+          name: Social_Media
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_Social_Media_Put'
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+        - type: integer
+          description: Social Media ID
+          name: socialMediaId
+          in: path
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
     delete:
+      description: Get Social_MEdia
       consumes:
-      - application/json
-      description: Delete Data Account
-      parameters:
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
+        - application/json
       produces:
-      - application/json
+        - application/json
+      tags:
+        - SOCIAL_MEDIA
+      summary: Get Social_Media
+      parameters:
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+        - type: integer
+          description: Social Media ID
+          name: socialMediaId
+          in: path
+          required: true
       responses:
-        "200":
+        '200':
           description: success
           schema:
             type: string
-      summary: Delete Data Account
-      tags:
-      - USER
+  /users:
     put:
-      consumes:
-      - application/json
       description: Update Data Account
-      parameters:
-      - description: Update Data User
-        in: body
-        name: User
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_User_Update_Put'
-      - description: 'Token Barier example: ''Bearer 12355f32r'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: User ID
-        in: query
-        name: userid
-        required: true
-        type: integer
+      consumes:
+        - application/json
       produces:
-      - application/json
+        - application/json
+      tags:
+        - USER
+      summary: Update Data Account
+      parameters:
+        - description: Update Data User
+          name: User
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_User_Update_Put'
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+        - type: integer
+          description: User ID
+          name: userid
+          in: query
+          required: true
       responses:
-        "200":
+        '200':
           description: success
           schema:
             type: string
-      summary: Update Data Account
+    delete:
+      description: Delete Data Account
+      consumes:
+        - application/json
+      produces:
+        - application/json
       tags:
-      - USER
+        - USER
+      summary: Delete Data Account
+      parameters:
+        - type: string
+          description: 'Token Barier example: ''Bearer 12355f32r'''
+          name: Authorization
+          in: header
+          required: true
+      responses:
+        '200':
+          description: success
+          schema:
+            type: string
   /users/login:
     post:
-      consumes:
-      - application/json
       description: Login Account
-      parameters:
-      - description: Login User
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_User_Login_Post'
+      consumes:
+        - application/json
       produces:
-      - application/json
+        - application/json
+      tags:
+        - USER
+      summary: Login Account
+      parameters:
+        - description: Login User
+          name: user
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_User_Login_Post'
       responses:
-        "200":
+        '200':
           description: success
           schema:
             type: string
-      summary: Login Account
-      tags:
-      - USER
   /users/register:
     post:
-      consumes:
-      - application/json
       description: Register User
-      parameters:
-      - description: Register User
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/views.Swagger_User_Register_Post'
+      consumes:
+        - application/json
       produces:
-      - application/json
+        - application/json
+      tags:
+        - USER
+      summary: Creates User account
+      parameters:
+        - description: Register User
+          name: user
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/views.Swagger_User_Register_Post'
       responses:
-        "201":
+        '201':
           description: success
           schema:
             type: string
-      summary: Creates User account
-      tags:
-      - USER
-swagger: "2.0"
+definitions:
+  views.Swagger_Comment_Register_Post:
+    type: object
+    properties:
+      message:
+        type: string
+        example: String
+      photo_id:
+        type: integer
+        example: 0
+  views.Swagger_Comment_Register_Put:
+    type: object
+    properties:
+      message:
+        type: string
+        example: String
+  views.Swagger_Photo_Register_Post:
+    type: object
+    properties:
+      caption:
+        type: string
+        example: String
+      photo_url:
+        type: string
+        example: String
+      title:
+        type: string
+        example: String
+  views.Swagger_Social_Media_Post:
+    type: object
+    properties:
+      name:
+        type: string
+        example: String
+      profile_image_url:
+        type: string
+        example: String
+      social_media_url:
+        type: string
+        example: String
+  views.Swagger_Social_Media_Put:
+    type: object
+    properties:
+      name:
+        type: string
+        example: String
+      social_media_url:
+        type: string
+        example: String
+  views.Swagger_User_Login_Post:
+    type: object
+    properties:
+      email:
+        type: string
+        example: String
+      password:
+        type: string
+        example: String
+  views.Swagger_User_Register_Post:
+    type: object
+    properties:
+      age:
+        type: integer
+        example: 0
+      email:
+        type: string
+        example: String
+      password:
+        type: string
+        example: String
+      username:
+        type: string
+        example: String
+  views.Swagger_User_Update_Put:
+    type: object
+    properties:
+      email:
+        type: string
+        example: String
+      username:
+        type: string
+        example: String
