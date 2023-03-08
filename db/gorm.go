@@ -23,7 +23,7 @@ const (
 	host   = "containers-us-west-105.railway.app"
 	port   = "5809"
 	user   = "postgres"
-	pass   = "GlTOYn3jppSR0V5gV3iE"
+	pass   = "t9bbvlMAgxVvjbRxn94e"
 	dbname = "railway"
 )
 
