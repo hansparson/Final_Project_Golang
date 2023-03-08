@@ -24,7 +24,7 @@ const (
 	port   = "7132"
 	user   = "postgres"
 	pass   = "UhTOywF4FVz3TTRddYmW"
-	dbname = "railway"
+	dbname = "Postgres"
 )
 
 func ConnectGorm() *gorm.DB {
