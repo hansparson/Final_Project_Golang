@@ -20,10 +20,10 @@ import (
 
 // Railway DB
 const (
-	host   = "containers-us-west-105.railway.app"
-	port   = "5809"
+	host   = "containers-us-west-49.railway.app"
+	port   = "7132"
 	user   = "postgres"
-	pass   = "t9bbvlMAgxVvjbRxn94e"
+	pass   = "UhTOywF4FVz3TTRddYmW"
 	dbname = "railway"
 )
 
